@@ -23,7 +23,7 @@ function getRandomPair(cities: City[], excludeIndices: number[] = []): [number, 
 }
 
 const gradientOverlay =
-  "linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.65) 100%)";
+  "linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.82) 100%)";
 
 function CityCard({
   city,
@@ -42,23 +42,28 @@ function CityCard({
 }) {
   return (
     <div
+      className="city-card-premium"
       style={{
         position: "relative",
-        width: "100vw",
-        height: "100vh",
+        width: "50vw",
+        minWidth: 0,
         maxWidth: "50vw",
+        height: "100vh",
         overflow: "hidden",
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
-        borderRadius: "0 32px 32px 0",
-        boxShadow: highlight
-          ? "0 0 0 6px #4ade80, 0 8px 32px #0006"
-          : "0 8px 32px #0006",
-        transition: "box-shadow 0.3s",
         margin: 0,
+        background: "#18181b",
+        border: highlight
+          ? "2.5px solid #ffd700"
+          : "1.5px solid rgba(255,255,255,0.08)",
+        boxShadow: highlight
+          ? "0 0 0 6px #ffd700, 0 12px 48px #000a"
+          : "0 8px 48px #000a",
+        transition: "box-shadow 0.3s, border 0.3s",
+        borderRadius: 0,
         padding: 0,
-        background: "#222",
       }}
     >
       <img
@@ -72,7 +77,9 @@ function CityCard({
           height: "100%",
           objectFit: "cover",
           zIndex: 1,
-          filter: highlight ? "brightness(1.1) saturate(1.1)" : "brightness(0.95)",
+          filter: highlight
+            ? "brightness(1.08) saturate(1.15) blur(0.5px)"
+            : "brightness(0.98) saturate(1.08)",
           transition: "filter 0.3s",
         }}
       />
@@ -90,28 +97,107 @@ function CityCard({
           zIndex: 3,
           color: "#fff",
           width: "100%",
-          padding: "2.5rem 1.5rem 2rem 1.5rem",
+          padding: "2.5rem 2.5rem 2.5rem 2.5rem",
           textAlign: "center",
-          textShadow: "0 2px 12px #000a",
-          background: "rgba(0,0,0,0.10)",
-          borderRadius: "0 0 32px 32px",
+          textShadow: "0 2px 24px #000c",
+          background: "rgba(0,0,0,0.18)",
+          borderRadius: 0,
+          backdropFilter: "blur(2.5px)",
+          boxShadow: "0 4px 32px #0006",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100%",
         }}
       >
-        <h2 style={{ fontSize: 36, margin: 0, fontWeight: 700, letterSpacing: 1 }}>
+        <h2
+          style={{
+            fontSize: 40,
+            margin: 0,
+            fontWeight: 800,
+            letterSpacing: 1.5,
+            color: "#fff",
+            textTransform: "uppercase",
+            lineHeight: 1.1,
+            textShadow: "0 2px 24px #000c, 0 1px 0 #ffd70044",
+            textAlign: "center",
+          }}
+        >
           {city}
         </h2>
-        <p style={{ fontSize: 20, margin: "8px 0 0 0", fontWeight: 400 }}>
+        <p
+          style={{
+            fontSize: 22,
+            margin: "10px 0 0 0",
+            fontWeight: 500,
+            color: "#ffd700",
+            letterSpacing: 1,
+            textShadow: "0 1px 8px #000a",
+            textAlign: "center",
+          }}
+        >
           {country}
         </p>
-        <p style={{ fontSize: 28, margin: "18px 0 0 0", fontWeight: 600 }}>
-          {showPopulation ? (
-            <span>
-              <span style={{ color: "#4ade80" }}>{population.toLocaleString()}</span>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: 28,
+            width: "100%",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 38,
+              fontWeight: 900,
+              letterSpacing: 2,
+              color: showPopulation ? "#fff" : "#bdbdbd",
+              textShadow: "0 2px 12px #000a",
+              background: showPopulation
+                ? "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)"
+                : "none",
+              WebkitBackgroundClip: showPopulation ? "text" : undefined,
+              WebkitTextFillColor: showPopulation ? "transparent" : undefined,
+              display: "inline-block",
+              borderRadius: 12,
+              padding: showPopulation ? "0.15em 0.8em" : undefined,
+              boxShadow: showPopulation ? "0 2px 12px #ffd70044" : undefined,
+              minHeight: 48,
+              textAlign: "center",
+              transition: "all 0.2s",
+              border: showPopulation ? "2.5px solid #ffd70055" : undefined,
+              marginBottom: 0,
+            }}
+          >
+            {showPopulation ? (
+              <span>
+                {population.toLocaleString()}
+              </span>
+            ) : (
+              <span style={{ color: "#bdbdbd", letterSpacing: 4, fontWeight: 600 }}>???</span>
+            )}
+          </div>
+          {showPopulation && (
+            <span
+              style={{
+                fontSize: 16,
+                color: "#ffd700cc",
+                fontWeight: 600,
+                marginTop: 6,
+                letterSpacing: 1.2,
+                textShadow: "0 1px 8px #000a",
+                background: "rgba(24,24,27,0.45)",
+                borderRadius: 8,
+                padding: "2px 12px",
+                display: "inline-block",
+              }}
+            >
+              Population
             </span>
-          ) : (
-            <span style={{ color: "#ddd", letterSpacing: 2 }}>???</span>
           )}
-        </p>
+        </div>
       </div>
     </div>
   );
@@ -155,9 +241,10 @@ export default function HigherOrLower() {
       if (isCorrect) {
         setScore((s) => s + 1);
         // Next round: cityB becomes cityA, pick a new cityB
-        let newIdxA = idxB;
-        let exclude = [newIdxA];
-        let [_, newIdxB] = getRandomPair(cities, exclude);
+        const newIdxA = idxB;
+        const exclude = [newIdxA];
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const [_, newIdxB] = getRandomPair(cities, exclude);
         setCurrentPair([newIdxA, newIdxB]);
       } else {
         setGameState("lost");
@@ -183,13 +270,25 @@ export default function HigherOrLower() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#18181b",
+          background: "linear-gradient(120deg, #232526 0%, #414345 100%)",
           color: "#fff",
-          fontSize: 28,
-          fontFamily: "Inter, sans-serif",
+          fontSize: 32,
+          fontFamily: "Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+          letterSpacing: 1.5,
         }}
       >
-        Loading...
+        <div style={{
+          padding: "2.5rem 3rem",
+          borderRadius: 24,
+          background: "rgba(24,24,27,0.85)",
+          boxShadow: "0 8px 48px #000a",
+          fontWeight: 600,
+          fontSize: 32,
+          color: "#ffd700",
+          border: "2px solid #ffd70033",
+        }}>
+          Loading...
+        </div>
       </div>
     );
   }
@@ -203,8 +302,9 @@ export default function HigherOrLower() {
       style={{
         minHeight: "100vh",
         width: "100vw",
-        background: "linear-gradient(120deg, #18181b 0%, #23272f 100%)",
-        fontFamily: "Inter, sans-serif",
+        background:
+          "radial-gradient(ellipse at 60% 0%, #232526 0%, #18181b 100%)",
+        fontFamily: "Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
         overflow: "hidden",
         position: "relative",
       }}
@@ -219,39 +319,151 @@ export default function HigherOrLower() {
           zIndex: 10,
           padding: "2.5rem 0 0 0",
           pointerEvents: "none",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <h1
           style={{
             textAlign: "center",
-            fontSize: 44,
-            fontWeight: 800,
+            fontSize: 54,
+            fontWeight: 900,
             color: "#fff",
-            letterSpacing: 1,
+            letterSpacing: 2,
             margin: 0,
-            textShadow: "0 2px 16px #000a",
+            textShadow: "0 4px 32px #000c, 0 1px 0 #ffd70044",
             pointerEvents: "auto",
+            textTransform: "uppercase",
+            background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            display: "inline-block",
+            filter: "drop-shadow(0 2px 16px #ffd70044)",
           }}
         >
-          City Population: <span style={{ color: "#4ade80" }}>Higher</span> or <span style={{ color: "#f87171" }}>Lower</span>?
+          City Population
         </h1>
         <div
           style={{
             textAlign: "center",
-            marginTop: 12,
-            fontSize: 22,
-            color: "#a3a3a3",
-            fontWeight: 500,
+            marginTop: 10,
+            fontSize: 28,
+            color: "#fff",
+            fontWeight: 600,
             textShadow: "0 1px 8px #0008",
             pointerEvents: "auto",
+            letterSpacing: 1.2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 18,
           }}
         >
-          Score: <span style={{ color: "#4ade80", fontWeight: 700 }}>{score}</span>
+          <span
+            style={{
+              background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: 800,
+              fontSize: 30,
+              letterSpacing: 2,
+              textShadow: "0 2px 12px #ffd70044",
+            }}
+          >
+            Higher
+          </span>
+          <span style={{
+            color: "#fff",
+            fontWeight: 700,
+            fontSize: 24,
+            opacity: 0.7,
+            margin: "0 8px",
+          }}>
+            or
+          </span>
+          <span
+            style={{
+              background: "linear-gradient(90deg, #f87171 0%, #fbbf24 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: 800,
+              fontSize: 30,
+              letterSpacing: 2,
+              textShadow: "0 2px 12px #fbbf2444",
+            }}
+          >
+            Lower
+          </span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: 22,
+            width: "100vw",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: 32,
+              color: "#ffd700",
+              fontWeight: 700,
+              textShadow: "0 2px 12px #ffd70044",
+              pointerEvents: "auto",
+              letterSpacing: 1.2,
+              background: "linear-gradient(90deg, #232526 0%, #18181b 100%)",
+              display: "inline-block",
+              padding: "0.5em 2.5em",
+              borderRadius: 20,
+              border: "2.5px solid #ffd70088",
+              boxShadow: "0 2px 18px #ffd70022",
+              marginBottom: 0,
+              marginTop: 0,
+              minWidth: 220,
+              maxWidth: 340,
+              fontFamily: "inherit",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <span
+              style={{
+                color: "#fff",
+                fontWeight: 900,
+                fontSize: 38,
+                background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                textShadow: "0 2px 12px #ffd70044",
+                marginRight: 10,
+                verticalAlign: "middle",
+              }}
+            >
+              {score}
+            </span>
+            <span
+              style={{
+                color: "#ffd700",
+                fontWeight: 700,
+                fontSize: 22,
+                letterSpacing: 1.2,
+                marginLeft: 6,
+                verticalAlign: "middle",
+                textShadow: "0 1px 8px #000a",
+              }}
+            >
+              Score
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Main Game Area */}
       <div
+        className="main-flex-premium"
         style={{
           display: "flex",
           flexDirection: "row",
@@ -261,6 +473,7 @@ export default function HigherOrLower() {
           justifyContent: "center",
           position: "relative",
           zIndex: 2,
+          gap: 0,
         }}
       >
         {/* City A */}
@@ -274,97 +487,148 @@ export default function HigherOrLower() {
 
         {/* VS and Buttons */}
         <div
+          className="vs-col-premium"
           style={{
-            width: 120,
-            minWidth: 120,
-            maxWidth: 120,
+            width: 0,
+            minWidth: 0,
+            maxWidth: 0,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 5,
             position: "relative",
-            background: "rgba(24,24,27,0.92)",
-            borderRadius: 32,
-            margin: "0 -32px",
-            boxShadow: "0 4px 32px #0008",
-            gap: 24,
+            background: "transparent",
+            borderRadius: 0,
+            margin: 0,
+            boxShadow: "none",
+            gap: 0,
+            border: "none",
+            padding: 0,
+            pointerEvents: "none",
           }}
         >
+          {/* Absolutely position VS and buttons in the center */}
           <div
             style={{
-              fontSize: 38,
-              fontWeight: 900,
-              color: "#fff",
-              letterSpacing: 2,
-              marginBottom: 12,
-              textShadow: "0 2px 12px #000a",
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 20,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              pointerEvents: "auto",
+              background: "rgba(24,24,27,0.98)",
+              borderRadius: 32,
+              boxShadow: "0 8px 48px #000a",
+              border: "2.5px solid #ffd70033",
+              padding: "2.5rem 2.5rem",
+              minWidth: 220,
+              maxWidth: 320,
+              gap: 32,
             }}
           >
-            VS
-          </div>
-          {gameState === "playing" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <button
-                onClick={() => handleGuess("higher")}
-                disabled={showResult}
-                style={{
-                  fontSize: 22,
-                  fontWeight: 700,
-                  padding: "16px 0",
-                  width: 90,
-                  borderRadius: 12,
-                  border: "none",
-                  background: showResult
-                    ? "#4ade80cc"
-                    : "linear-gradient(90deg, #4ade80 0%, #22d3ee 100%)",
-                  color: "#18181b",
-                  boxShadow: "0 2px 8px #0004",
-                  cursor: showResult ? "not-allowed" : "pointer",
-                  transition: "background 0.2s, color 0.2s",
-                  outline: "none",
-                }}
-              >
-                Higher
-              </button>
-              <button
-                onClick={() => handleGuess("lower")}
-                disabled={showResult}
-                style={{
-                  fontSize: 22,
-                  fontWeight: 700,
-                  padding: "16px 0",
-                  width: 90,
-                  borderRadius: 12,
-                  border: "none",
-                  background: showResult
-                    ? "#f87171cc"
-                    : "linear-gradient(90deg, #f87171 0%, #fbbf24 100%)",
-                  color: "#18181b",
-                  boxShadow: "0 2px 8px #0004",
-                  cursor: showResult ? "not-allowed" : "pointer",
-                  transition: "background 0.2s, color 0.2s",
-                  outline: "none",
-                }}
-              >
-                Lower
-              </button>
-            </div>
-          )}
-          {showResult && (
             <div
               style={{
-                marginTop: 8,
-                fontSize: 24,
-                fontWeight: 700,
-                color: lastGuessCorrect ? "#4ade80" : "#f87171",
-                textShadow: "0 2px 8px #000a",
-                minHeight: 32,
+                fontSize: 48,
+                fontWeight: 900,
+                color: "#ffd700",
+                letterSpacing: 3,
+                marginBottom: 18,
+                textShadow: "0 2px 24px #ffd70044, 0 1px 0 #fffbe644",
+                background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                filter: "drop-shadow(0 2px 16px #ffd70044)",
               }}
             >
-              {lastGuessCorrect ? "Correct!" : "Wrong!"}
+              VS
             </div>
-          )}
+            {gameState === "playing" && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+                <button
+                  onClick={() => handleGuess("higher")}
+                  disabled={showResult}
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 800,
+                    padding: "18px 0",
+                    width: 140,
+                    borderRadius: 18,
+                    border: "none",
+                    background: showResult
+                      ? "linear-gradient(90deg, #ffd700cc 0%, #fffbe6cc 100%)"
+                      : "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+                    color: "#18181b",
+                    boxShadow: "0 4px 24px #ffd70033",
+                    cursor: showResult ? "not-allowed" : "pointer",
+                    transition: "background 0.2s, color 0.2s, box-shadow 0.2s",
+                    outline: "none",
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
+                    borderBottom: "3.5px solid #fffbe6",
+                    filter: showResult ? "grayscale(0.2)" : "none",
+                  }}
+                >
+                  Higher
+                </button>
+                <button
+                  onClick={() => handleGuess("lower")}
+                  disabled={showResult}
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 800,
+                    padding: "18px 0",
+                    width: 140,
+                    borderRadius: 18,
+                    border: "none",
+                    background: showResult
+                      ? "linear-gradient(90deg, #f87171cc 0%, #fbbf24cc 100%)"
+                      : "linear-gradient(90deg, #f87171 0%, #fbbf24 100%)",
+                    color: "#18181b",
+                    boxShadow: "0 4px 24px #fbbf2433",
+                    cursor: showResult ? "not-allowed" : "pointer",
+                    transition: "background 0.2s, color 0.2s, box-shadow 0.2s",
+                    outline: "none",
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
+                    borderBottom: "3.5px solid #fbbf24",
+                    filter: showResult ? "grayscale(0.2)" : "none",
+                  }}
+                >
+                  Lower
+                </button>
+              </div>
+            )}
+            {showResult && (
+              <div
+                style={{
+                  marginTop: 12,
+                  fontSize: 28,
+                  fontWeight: 900,
+                  color: lastGuessCorrect ? "#ffd700" : "#f87171",
+                  textShadow: lastGuessCorrect
+                    ? "0 2px 12px #ffd70044"
+                    : "0 2px 12px #f8717144",
+                  minHeight: 38,
+                  letterSpacing: 2,
+                  textTransform: "uppercase",
+                  background: lastGuessCorrect
+                    ? "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)"
+                    : "linear-gradient(90deg, #f87171 0%, #fbbf24 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  filter: lastGuessCorrect
+                    ? "drop-shadow(0 2px 8px #ffd70044)"
+                    : "drop-shadow(0 2px 8px #f8717144)",
+                }}
+              >
+                {lastGuessCorrect ? "Correct!" : "Wrong!"}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* City B */}
@@ -384,7 +648,7 @@ export default function HigherOrLower() {
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(24,24,27,0.92)",
+            background: "rgba(24,24,27,0.98)",
             zIndex: 100,
             display: "flex",
             flexDirection: "column",
@@ -392,48 +656,107 @@ export default function HigherOrLower() {
             justifyContent: "center",
             color: "#fff",
             textAlign: "center",
-            fontFamily: "Inter, sans-serif",
+            fontFamily: "Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
             animation: "fadeIn 0.4s",
+            backdropFilter: "blur(2.5px)",
           }}
         >
           <h2
             style={{
-              fontSize: 54,
+              fontSize: 64,
               fontWeight: 900,
               margin: 0,
-              color: "#f87171",
-              textShadow: "0 2px 16px #000a",
+              background: "linear-gradient(90deg, #f87171 0%, #fbbf24 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              textShadow: "0 2px 24px #fbbf2444, 0 1px 0 #fffbe644",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              filter: "drop-shadow(0 2px 16px #fbbf2444)",
             }}
           >
             Game Over!
           </h2>
-          <p
+          <div
             style={{
-              fontSize: 28,
-              margin: "18px 0 0 0",
-              color: "#a3a3a3",
-              fontWeight: 500,
-              textShadow: "0 1px 8px #0008",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginTop: 24,
+              width: "100%",
             }}
           >
-            Your final score:{" "}
-            <span style={{ color: "#4ade80", fontWeight: 700 }}>{score}</span>
-          </p>
+            <div
+              style={{
+                fontSize: 38,
+                color: "#ffd700",
+                fontWeight: 700,
+                textShadow: "0 2px 12px #ffd70044",
+                letterSpacing: 1.2,
+                background: "linear-gradient(90deg, #232526 0%, #18181b 100%)",
+                display: "inline-block",
+                padding: "0.5em 2.5em",
+                borderRadius: 20,
+                border: "2.5px solid #ffd70088",
+                boxShadow: "0 2px 18px #ffd70022",
+                marginBottom: 0,
+                marginTop: 0,
+                minWidth: 220,
+                maxWidth: 340,
+                fontFamily: "inherit",
+                position: "relative",
+                overflow: "hidden",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  color: "#fff",
+                  fontWeight: 900,
+                  fontSize: 44,
+                  background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  textShadow: "0 2px 12px #ffd70044",
+                  marginRight: 10,
+                  verticalAlign: "middle",
+                }}
+              >
+                {score}
+              </span>
+              <span
+                style={{
+                  color: "#ffd700",
+                  fontWeight: 700,
+                  fontSize: 24,
+                  letterSpacing: 1.2,
+                  marginLeft: 6,
+                  verticalAlign: "middle",
+                  textShadow: "0 1px 8px #000a",
+                }}
+              >
+                Final Score
+              </span>
+            </div>
+          </div>
           <button
             onClick={handleRestart}
             style={{
-              fontSize: 24,
-              fontWeight: 700,
-              padding: "16px 48px",
-              marginTop: 36,
-              borderRadius: 16,
+              fontSize: 28,
+              fontWeight: 900,
+              padding: "20px 64px",
+              marginTop: 48,
+              borderRadius: 24,
               border: "none",
-              background: "linear-gradient(90deg, #4ade80 0%, #22d3ee 100%)",
+              background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
               color: "#18181b",
-              boxShadow: "0 2px 12px #0006",
+              boxShadow: "0 4px 24px #ffd70044",
               cursor: "pointer",
               transition: "background 0.2s, color 0.2s",
               outline: "none",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              borderBottom: "4px solid #fffbe6",
             }}
           >
             Play Again
@@ -441,22 +764,38 @@ export default function HigherOrLower() {
         </div>
       )}
 
-      {/* Responsive styles */}
+      {/* Premium Responsive styles */}
       <style>{`
-        @media (max-width: 900px) {
-          .city-card {
+        @media (max-width: 1200px) {
+          .city-card-premium {
             max-width: 100vw !important;
-            border-radius: 0 !important;
-          }
-          .vs-col {
+            min-width: 0 !important;
             width: 100vw !important;
-            min-width: 100vw !important;
-            max-width: 100vw !important;
-            margin: 0 !important;
             border-radius: 0 !important;
+            height: 50vh !important;
           }
-          .main-flex {
+          .main-flex-premium {
             flex-direction: column !important;
+            gap: 0 !important;
+            align-items: stretch !important;
+            height: 100vh !important;
+          }
+        }
+        @media (max-width: 700px) {
+          .city-card-premium {
+            max-width: 100vw !important;
+            min-width: 0 !important;
+            width: 100vw !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 50vh !important;
+          }
+          .main-flex-premium {
+            flex-direction: column !important;
+            gap: 0 !important;
+            align-items: stretch !important;
+            height: 100vh !important;
           }
         }
       `}</style>
