@@ -210,6 +210,23 @@ export default function HigherOrLower() {
   const [gameState, setGameState] = useState<GameState>("playing");
   const [showResult, setShowResult] = useState(false);
   const [lastGuessCorrect, setLastGuessCorrect] = useState<boolean | null>(null);
+  const [highScore, setHighScore] = useState<number>(0);
+
+  // Load high score from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("higherOrLowerHighScore");
+    if (stored) {
+      setHighScore(Number(stored));
+    }
+  }, []);
+
+  // Save high score to localStorage if score beats it
+  useEffect(() => {
+    if (score > highScore) {
+      setHighScore(score);
+      localStorage.setItem("higherOrLowerHighScore", String(score));
+    }
+  }, [score, highScore]);
 
   // Load cities.json
   useEffect(() => {
@@ -273,7 +290,6 @@ export default function HigherOrLower() {
           background: "linear-gradient(120deg, #232526 0%, #414345 100%)",
           color: "#fff",
           fontSize: 32,
-          fontFamily: "Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
           letterSpacing: 1.5,
         }}
       >
@@ -304,7 +320,6 @@ export default function HigherOrLower() {
         width: "100vw",
         background:
           "radial-gradient(ellipse at 60% 0%, #232526 0%, #18181b 100%)",
-        fontFamily: "Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
         overflow: "hidden",
         position: "relative",
       }}
@@ -458,6 +473,61 @@ export default function HigherOrLower() {
               Score
             </span>
           </div>
+          {/* High Score Display */}
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: 22,
+              color: "#fffbe6",
+              fontWeight: 700,
+              textShadow: "0 2px 8px #ffd70044",
+              pointerEvents: "auto",
+              letterSpacing: 1.1,
+              background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              display: "inline-block",
+              padding: "0.25em 1.5em",
+              borderRadius: 16,
+              border: "2px solid #ffd70033",
+              boxShadow: "0 1px 8px #ffd70022",
+              marginTop: 10,
+              minWidth: 160,
+              maxWidth: 260,
+              fontFamily: "inherit",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <span
+              style={{
+                color: "#fff",
+                fontWeight: 900,
+                fontSize: 26,
+                background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                textShadow: "0 2px 8px #ffd70044",
+                marginRight: 8,
+                verticalAlign: "middle",
+              }}
+            >
+              {highScore}
+            </span>
+            <span
+              style={{
+                color: "#ffd700",
+                fontWeight: 700,
+                fontSize: 18,
+                letterSpacing: 1.1,
+                marginLeft: 4,
+                verticalAlign: "middle",
+                textShadow: "0 1px 6px #000a",
+              }}
+            >
+              High Score
+            </span>
+          </div>
         </div>
       </div>
 
@@ -513,7 +583,7 @@ export default function HigherOrLower() {
             style={{
               position: "absolute",
               left: "50%",
-              top: "50%",
+              top: "70%",
               transform: "translate(-50%, -50%)",
               zIndex: 20,
               display: "flex",
@@ -524,7 +594,7 @@ export default function HigherOrLower() {
               borderRadius: 32,
               boxShadow: "0 8px 48px #000a",
               border: "2.5px solid #ffd70033",
-              padding: "2.5rem 2.5rem",
+              padding: "2rem 2rem",
               minWidth: 220,
               maxWidth: 320,
               gap: 32,
@@ -536,7 +606,7 @@ export default function HigherOrLower() {
                 fontWeight: 900,
                 color: "#ffd700",
                 letterSpacing: 3,
-                marginBottom: 18,
+                marginBottom: 0,
                 textShadow: "0 2px 24px #ffd70044, 0 1px 0 #fffbe644",
                 background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
                 WebkitBackgroundClip: "text",
@@ -555,7 +625,7 @@ export default function HigherOrLower() {
                     fontSize: 26,
                     fontWeight: 800,
                     padding: "18px 0",
-                    width: 140,
+                    width: 160,
                     borderRadius: 18,
                     border: "none",
                     background: showResult
@@ -581,7 +651,7 @@ export default function HigherOrLower() {
                     fontSize: 26,
                     fontWeight: 800,
                     padding: "18px 0",
-                    width: 140,
+                    width: 160,
                     borderRadius: 18,
                     border: "none",
                     background: showResult
@@ -656,7 +726,6 @@ export default function HigherOrLower() {
             justifyContent: "center",
             color: "#fff",
             textAlign: "center",
-            fontFamily: "Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
             animation: "fadeIn 0.4s",
             backdropFilter: "blur(2.5px)",
           }}
@@ -702,7 +771,7 @@ export default function HigherOrLower() {
                 marginBottom: 0,
                 marginTop: 0,
                 minWidth: 220,
-                maxWidth: 340,
+                maxWidth: 500,
                 fontFamily: "inherit",
                 position: "relative",
                 overflow: "hidden",
@@ -736,6 +805,61 @@ export default function HigherOrLower() {
                 }}
               >
                 Final Score
+              </span>
+            </div>
+            {/* High Score on Game Over */}
+            <div
+              style={{
+                fontSize: 24,
+                color: "#fffbe6",
+                fontWeight: 700,
+                textShadow: "0 2px 8px #ffd70044",
+                pointerEvents: "auto",
+                letterSpacing: 1.1,
+                background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                display: "inline-block",
+                padding: "0.25em 1.5em",
+                borderRadius: 16,
+                border: "2px solid #ffd70033",
+                boxShadow: "0 1px 8px #ffd70022",
+                marginTop: 12,
+                minWidth: 160,
+                maxWidth: 260,
+                fontFamily: "inherit",
+                position: "relative",
+                overflow: "hidden",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  color: "#fff",
+                  fontWeight: 900,
+                  fontSize: 28,
+                  background: "linear-gradient(90deg, #ffd700 0%, #fffbe6 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  textShadow: "0 2px 8px #ffd70044",
+                  marginRight: 8,
+                  verticalAlign: "middle",
+                }}
+              >
+                {highScore}
+              </span>
+              <span
+                style={{
+                  color: "#ffd700",
+                  fontWeight: 700,
+                  fontSize: 18,
+                  letterSpacing: 1.1,
+                  marginLeft: 4,
+                  verticalAlign: "middle",
+                  textShadow: "0 1px 6px #000a",
+                }}
+              >
+                High Score
               </span>
             </div>
           </div>
